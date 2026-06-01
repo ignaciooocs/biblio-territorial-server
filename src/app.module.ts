@@ -4,6 +4,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { RegistroModule } from './registro/registro.module';
 import { VisitasModule } from './visitas/visitas.module';
+import { ModerationModule } from './moderation/moderation.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { VisitasModule } from './visitas/visitas.module';
     ),
     RegistroModule,
     VisitasModule,
+    ModerationModule,
   ],
   controllers: [AppController],
   providers: [AppService],
