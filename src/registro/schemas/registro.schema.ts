@@ -22,6 +22,9 @@ export class Registro {
 
   @Prop({ default: '' })
   telefono: string;
+
+  @Prop({ default: '' })
+  ipAddress: string;
 }
 
 export const RegistroSchema = SchemaFactory.createForClass(Registro);

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, ConflictException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { InstitucionResponse, InstitucionResponseDocument } from './schemas/institucion-response.schema';
@@ -11,8 +11,12 @@ export class InstitucionesService {
     private readonly model: Model<InstitucionResponseDocument>,
   ) {}
 
-  create(dto: CreateInstitucionResponseDto): Promise<InstitucionResponse> {
-    return this.model.create(dto);
+  async create(dto: CreateInstitucionResponseDto, ip: string): Promise<InstitucionResponse> {
+    if (ip) {
+      const existing = await this.model.findOne({ ipAddress: ip }).lean();
+      if (existing) throw new ConflictException('Ya existe una evaluación desde esta dirección IP');
+    }
+    return this.model.create({ ...dto, ipAddress: ip });
   }
 
   findAll(): Promise<InstitucionResponse[]> {

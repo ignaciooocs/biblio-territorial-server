@@ -31,6 +31,9 @@ export class InstitucionResponse {
 
   @Prop({ default: '' })
   condiciones: string;
+
+  @Prop({ default: '' })
+  ipAddress: string;
 }
 
 export const InstitucionResponseSchema = SchemaFactory.createForClass(InstitucionResponse);

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, ConflictException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Registro, RegistroDocument } from './schemas/registro.schema';
@@ -10,9 +10,12 @@ export class RegistroService {
     @InjectModel(Registro.name) private registroModel: Model<RegistroDocument>,
   ) {}
 
-  async create(dto: CreateRegistroDto): Promise<RegistroDocument> {
-    const registro = new this.registroModel(dto);
-    return registro.save();
+  async create(dto: CreateRegistroDto, ip: string): Promise<RegistroDocument> {
+    if (ip) {
+      const existing = await this.registroModel.findOne({ ipAddress: ip }).lean();
+      if (existing) throw new ConflictException('Ya existe un registro desde esta dirección IP');
+    }
+    return this.registroModel.create({ ...dto, ipAddress: ip });
   }
 
   async findAll(): Promise<RegistroDocument[]> {
